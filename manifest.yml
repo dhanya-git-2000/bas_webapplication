@@ -1,0 +1,10 @@
+applications:
+  - name: baas
+    path: ./build  # Ensure this is the correct path to your build output
+    buildpacks:
+      - staticfile_buildpack
+    memory: 64M
+    instances: 1  # Optional, you can specify the number of app instances if needed
+    disk_quota: 128M  # Optional, specify disk quota if needed
+    routes:
+      - route: baas.cfapps.eu10-004.hana.ondemand.com

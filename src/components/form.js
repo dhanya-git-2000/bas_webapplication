@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { Fields } from "../constants";
 import { useNavigate } from "react-router-dom";
+import image from '../images/BAS-logo-1.jpg'
 
 const Form = () => {
     const navigate = useNavigate();
@@ -12,10 +13,17 @@ const Form = () => {
     const [postingDate, setPostingDate] = useState("");
     const [quantity, setQuantity] = useState("");
     const [assetValue, setAssetValue] = useState("");
+    const [Details, setDetails] = useState([]);
     const [dropdownValues, setDropdownValues] = useState(Fields.map(() => "")); // Store dropdown selections
     
-
+    // const [formData, setFormData] = useState({
+    //     ItemName: '',
+    //     PostingDate: '',
+    //     Quantity: '',
+    //     AssetValue: '',
+    //   });
     const isFormValid = () => {
+        
         return (
             itemName &&
             postingDate &&
@@ -31,14 +39,12 @@ const Form = () => {
     };
 
     // Open modal by directly manipulating the DOM
-    const openModal = () => {
-        const modal = document.getElementById('exampleModal');
-        if (modal) {
-            modal.classList.add('show');
-            modal.style.display = 'block';
-            modal.setAttribute('aria-modal', 'true');
-            modal.removeAttribute('aria-hidden');
+    const handleSubmit = () => {
+        const allValues = [itemName, postingDate, quantity, assetValue, ...dropdownValues];
+        if (allValues.every(value => value)) {
+            navigate('/', { state: allValues }); // Pass array to next page
         }
+        
     };
 
     // Close modal by directly manipulating the DOM
@@ -53,17 +59,40 @@ const Form = () => {
     };
 
     const handleprint = () => {
-        // Changeprint(true);
-        navigate('/barcode');
+        // const newData = {
+        //     ItemName: formData.itemName,
+        //     PostingDate: formData.postingDate,
+        //     Quantity: formData.quantity,
+        //     AssetValue: formData.assetValue,
+        //   };
+        // setDetails([...Details, newData]);
+        const allValues = [itemName, postingDate, quantity, assetValue, ...dropdownValues];
+        if (allValues.every(value => value)) {
+            navigate('/', { state: allValues }); // Pass array to next page
+        }
+        // navigate('/barcode');
+    }
+    const handlePreviouspage=()=>{
+        navigate('/');
     }
 
     return (
         <form>
+         <div className="header">
+                <img src={image} className="image" />
+                <span className="button-group">
+
+                    <button className="btn" onClick={handlePreviouspage} >
+                        Back
+                    </button>
+
+                </span>
+            </div>
             <div className="container mt-2">
                 <div className="form-container">
                     <div className="row">
-                        <label htmlFor="itemName" className="col-6 col-sm-6 col-md-3 col-form-label text-start">Item Name</label>
-                        <div className="col-sm-6 col-md-3">
+                        <label htmlFor="itemName" className="col-6 col-sm-6 col-md-3 col-form-label text-start rightlabel">Item Name</label>
+                        <div className="col-sm-6 col-md-3 rightinput">
                             <input
                                 type="text"
                                 className="form-control"
@@ -73,8 +102,8 @@ const Form = () => {
                                 onChange={(e) => setItemName(e.target.value)}
                             />
                         </div>
-                        <label htmlFor="date" className="col-sm-6 col-md-2 col-form-label text-start">Posting Date</label>
-                        <div className="col-sm-6 col-md-4">
+                        <label htmlFor="date" className="col-sm-6 col-md-2 col-form-label text-start leftlabel">Posting Date</label>
+                        <div className="col-sm-6 col-md-4 ">
                             <input
                                 type="date"
                                 className="form-control"
@@ -86,8 +115,8 @@ const Form = () => {
                     </div>
 
                     <div className="row">
-                        <label htmlFor="quantity" className="col-sm-6 col-md-3 col-form-label text-start">Quantity</label>
-                        <div className="col-sm-6 col-md-3">
+                        <label htmlFor="quantity" className="col-sm-6 col-md-3 col-form-label text-start rightlabel">Quantity</label>
+                        <div className="col-sm-6 col-md-3 rightinput">
                             <input
                                 type="number"
                                 className="form-control"
@@ -97,7 +126,7 @@ const Form = () => {
                                 onChange={(e) => setQuantity(e.target.value)}
                             />
                         </div>
-                        <label htmlFor="assetValue" className="col-sm-6 col-md-2 col-form-label text-start">Asset Value</label>
+                        <label htmlFor="assetValue" className="col-sm-6 col-md-2 col-form-label text-start leftlabel">Asset Value</label>
                         <div className="col-sm-6 col-md-4">
                             <input
                                 type="number"
@@ -117,10 +146,10 @@ const Form = () => {
                         if (index % 2 === 0) {
                             return (
                                 <div className="row mb-3" key={index}>
-                                    <label htmlFor={`dropdown-${index}`} className="col-sm-6 col-md-3 col-form-label text-start">
+                                    <label htmlFor={`dropdown-${index}`} className="col-sm-6 col-md-3 col-form-label text-start rightlabel">
                                         {field.fieldItems}
                                     </label>
-                                    <div className="col-sm-6 col-md-3">
+                                    <div className="col-sm-6 col-md-3 rightinput">
                                         <select
                                             className="form-control"
                                             id={`dropdown-${index}`}
@@ -137,7 +166,7 @@ const Form = () => {
                                     </div>
                                     {index + 1 < Fields.length && (
                                         <>
-                                            <label htmlFor={`dropdown-${index + 1}`} className="col-sm-6 col-md-2 col-form-label text-start">
+                                            <label htmlFor={`dropdown-${index + 1}`} className="col-sm-6 col-md-2 col-form-label text-start leftlabel">
                                                 {Fields[index + 1].fieldItems}
                                             </label>
                                             <div className="col-sm-6 col-md-4">
@@ -164,7 +193,7 @@ const Form = () => {
                     })}
                     <div>
                         <input
-                            onClick={openModal}
+                            onClick={handleSubmit}
                             type="button"
                             className="submit"
                             id="submit"
@@ -174,7 +203,7 @@ const Form = () => {
                     </div>
                 </div>
 
-                <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                {/* <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog">
                         <div className="modal-content">
                            
@@ -188,7 +217,7 @@ const Form = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
 
 
